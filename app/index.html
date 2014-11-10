@@ -1,0 +1,235 @@
+<!doctype html>
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+<title>Sprite Generator</title>
+<style type="text/css">
+body{background:#ccc}
+.box{
+position:absolute;
+	background-color:gray;
+height:50px;width:250px;
+	margin-top:120px;
+	margin-left:10px;
+border:1px ridge #aaa;
+	-moz-box-shadow: 10px 10px 10px #212121;
+	-webkit-box-shadow: 10px 10px 10px #212121;
+	box-shadow: 10px 10px 10px #616161;
+}
+canvas{
+	width:1000px;
+	heigth:1000px;
+	display:none;
+
+}
+img{
+width:50%;
+}
+
+</style>
+<script src='packer.growing.js'></script>
+<script type="text/javascript">
+ var pathW = './';
+  var fs = require('fs'),
+	  path = require('path');
+
+  fs.watch(pathW, [], function() {
+    if (location)
+      location.reload(false);
+  });
+
+var compteur=0
+var dir_path = "";
+var auth_extension = ['PNG','JPG'];
+var blocks = [];
+
+function dragenter(e) {
+	e.stopPropagation();
+	e.preventDefault();
+}
+
+function drop(e) {
+
+	if (!e) {
+		var fichier = document.getElementById('fileinput').files;
+	}
+	else {
+		var fichier = e.dataTransfer.files;
+	}
+
+	directoryProcessing(fichier[0].path,function(){
+
+		var packer = new GrowingPacker();
+
+
+		  //blocks.sort(function(a,b) { return (b.h < a.h); }); // sort inputs for best results
+		  packer.fit(blocks);
+
+			console.log(blocks);
+
+			var c=document.getElementById("canvas");
+			var ctx=c.getContext("2d");
+
+			var maxWidth = 0;
+			var maxHeight = 0;
+
+
+		  for(var n = 0 ; n < blocks.length ; n++) {
+		    var block = blocks[n];
+		    if (block.fit) {
+					if(block.fit.x > maxWidth)
+						maxWidth = block.fit.x + block.imgo.width;
+
+					if(block.fit.y > maxHeight)
+						maxHeight = block.fit.y + block.imgo.height;
+
+		    }
+		  }
+
+			ctx.canvas.width  = maxWidth;
+  		ctx.canvas.height = maxHeight;
+
+			for(var n = 0 ; n < blocks.length ; n++) {
+				var block = blocks[n];
+				if (block.fit) {
+					ctx.drawImage(block.imgo,block.fit.x,block.fit.y);
+				}
+			}
+
+			//console.log(c.toDataURL(),maxWidth,maxHeight);
+			saveSprite(c.toDataURL(),fichier[0].path);
+
+	});
+	chacharge(fichier)
+}
+
+function in_array(needle, haystack, argStrict) {
+	var key = '',
+		strict = !! argStrict;
+
+
+	if (strict) {
+		for (key in haystack) {
+			if (haystack[key] === needle) {
+				return true;
+			}
+		}
+	} else {
+		for (key in haystack) {
+			if (haystack[key] == needle) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+
+function chacharge(fichier){
+
+	if (fichier[compteur].type.match('image.*')){
+
+		var construction=document.createElement('img')
+		var elmage= document.body.appendChild(construction);
+
+		var charge=new FileReader();
+
+		charge.readAsDataURL(fichier[compteur]);
+
+		charge.onloadend = function(e){
+
+			elmage.src = e.target.result;
+
+			if (compteur<fichier.length-1) {
+				compteur++;
+				chacharge(fichier);
+			}
+			else{
+				compteur=0;
+			}
+		}
+	}
+
+	else{
+		if (compteur<fichier.length-1) {
+			compteur++;
+			chacharge(fichier);
+		}
+	}
+}
+
+
+function directoryProcessing(dir,callback){
+
+	if(fs.lstatSync(dir).isDirectory()){
+		dir_path = dir;
+		var files = fs.readdirSync(dir);
+		var images = [];
+		for(var i in files) {
+			var ext_file = getExtension(files[i]);
+			var full_path = dir_path+path.sep+files[i];
+			if(files[i] != '.DS_Store'){ //EXCEPTION MAC
+				//console.log(ext_file);
+				var block = {};
+				var image_base64 = file2Base64(full_path);
+				images.push(img = new Image());
+
+
+				img.src = image_base64;
+
+				blocks.push({w:img.width , h:img.height,imgo:img});
+			}
+
+
+			if(in_array(ext_file,auth_extension)){
+
+			}
+		}
+
+
+
+	}
+
+	if(typeof callback != "undefined")
+		callback();
+}
+
+function file2Base64(file){
+	var base64Image,
+		image_data = fs.readFileSync(file);
+		base64Image = new Buffer(image_data, 'binary').toString('base64');
+		base64Image ='data:image/png;base64,'+base64Image;
+
+	return base64Image;
+}
+
+
+function getExtension(filename) {
+    var ext = path.extname(filename||'').split('.');
+    return ext[ext.length - 1];
+}
+
+function saveSprite(spriteBase64, path_output){
+	var data        = spriteBase64,
+	base64Data,
+	binaryData;
+
+	base64Data  =   data.replace(/^data:image\/png;base64,/, "");
+	base64Data  +=  base64Data.replace('+', ' ');
+	binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
+
+	fs.writeFile(path_output+path.sep+"out.png", binaryData, "binary", function (err) {
+	    console.log(err); // writes out file without error, but it's not a valid image
+	});
+}
+
+</script>
+</head>
+<body>
+	<canvas id="canvas" width="500" height="500"></canvas>
+<div class='box' ondragenter="this.textContent = ''; dragenter(event)" ondragover="dragenter(event)" ondrop="dragenter(event); drop(event);">deplacez les elements a cette endroit.</div>
+<br>
+<input type='file' id='fileinput' multiple='multiple' onchange='drop()' nwdirectory >
+</body>
+</html>

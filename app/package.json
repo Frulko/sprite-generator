@@ -1,0 +1,9 @@
+{
+	"name" : "NQ Sprite",
+	"main" : "index.html",
+    "window" : {
+        "toolbar" : false,
+        "width" : 500,
+        "height" : 250
+    }
+}
