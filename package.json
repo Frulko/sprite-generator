@@ -1,0 +1,17 @@
+{
+  "name": "node-spritesheet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "binpacking": "^0.0.1",
+    "canvas": "git+https://github.com/Frulko/node-canvas-bin.git",
+    "colors": "^1.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
