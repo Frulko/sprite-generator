@@ -166,8 +166,7 @@ makeSpriteSheet = function (){
 
 
 var saveCanvas = function(canvas,name){
-	var export_path =__dirname+path.sep+'../'+ name +'.png';
-	console.log(__dirname+path.sep+'../');
+	var export_path =__dirname+path.sep+ name +'.png';
 	var out = fs.createWriteStream(export_path),
 		stream = canvas.createPNGStream();
 	
@@ -176,7 +175,7 @@ var saveCanvas = function(canvas,name){
 	});
 	
 	stream.on('end',function(){
-		console.log('end');
+		console.log(export_path);
 	});
 };
 
