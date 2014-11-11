@@ -6,7 +6,9 @@
   "dependencies": {
     "binpacking": "^0.0.1",
     "canvas": "git+https://github.com/Frulko/node-canvas-bin.git",
-    "colors": "^1.0.3"
+    "colors": "^1.0.3",
+    "file-size": "0.0.5",
+    "pngquant-bin": "^2.0.1"
   },
   "devDependencies": {},
   "scripts": {
