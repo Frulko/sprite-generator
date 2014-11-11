@@ -260,10 +260,10 @@ saveCanvas = function (canvas,name,callback){
 		  }, 0);
 				 
 		var size = filesize(contentLength).human({ jedec: true });
-		 
-		optimizeImage(sprite_dir,name,function(){
+		 callback();
+		/*optimizeImage(sprite_dir,name,function(){
 			callback();
-		});
+		});*/
 		console.log('[SUCCESS] sprite image saved ['+size+']');
 		
 		
@@ -273,8 +273,8 @@ saveCanvas = function (canvas,name,callback){
 
 var optimizeImage = function(dir,name,callback){
 	
-	var old_file = dir+path.sep+name+'_opti.png'
-	var optimized_file = dir+path.sep+name+'.png'
+	var old_file = dir+path.sep+name+'.png'
+	var optimized_file = dir+path.sep+name+'_opti.png'
 	
 	if(fs.existsSync(optimized_file))
 		fs.unlinkSync(optimized_file);
