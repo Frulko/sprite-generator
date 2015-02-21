@@ -1,3 +1,11 @@
+/*
+
+ Utils Class
+ Author: Guillaume Dumoulin @Frulko
+ Date: 19/02/2015
+
+ */
+
 var path = require('path'),
     filesize = require('file-size');
 
@@ -49,6 +57,13 @@ Utils.prototype.isUndefined = function(vars){
         return true;
 
     return false;
+};
+
+Utils.prototype.formatName = function(name){
+    var name = name.replace('.'+this.getExtensionName(name),'');
+    name = name.replace(/\s+/g,"_");
+
+    return name;
 };
 
 Utils.prototype.formatSize = function(raw_size){
