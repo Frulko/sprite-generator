@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "binpacking": "^0.0.1",
-    "canvas": "git+https://github.com/Frulko/node-canvas-bin.git",
+    "node-canvas-bin": "git+https://github.com/mauritslamers/node-canvas-bin.git",
     "colors": "^1.0.3",
     "file-size": "0.0.5",
     "lodash": "^3.3.0",
