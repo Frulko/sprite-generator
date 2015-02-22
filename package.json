@@ -5,16 +5,17 @@
   "main": "index.js",
   "dependencies": {
     "binpacking": "^0.0.1",
-    "node-canvas-bin": "git+https://github.com/mauritslamers/node-canvas-bin.git",
     "colors": "^1.0.3",
+    "dot": "^1.0.3",
     "file-size": "0.0.5",
-    "lodash": "^3.3.0",
-    "pngquant-bin": "^2.0.1"
+    "html": "0.0.7",
+    "moment": "^2.9.0",
+    "node-canvas-bin": "git+https://github.com/mauritslamers/node-canvas-bin.git",
+    "pngquant-bin": "^2.0.1",
+    "moment": "^2.9.0"
   },
   "devDependencies": {
-    "dot": "^1.0.3",
-    "lodash": "^3.3.0",
-    "moment": "^2.9.0"
+
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
