@@ -1,5 +1,23 @@
-/* GENERATED CSS - February 22nd 2015, 3:34:52 pm */ 
-.icon{ display:block } 
+/* GENERATED CSS - February 22nd 2015, 9:22:19 pm */ 
+.icon{ display:inline-block; *display:inline; *zoom:1; } 
 [class^="sg-"],[class*="sg-"] { background:url(s_sprite_new.png) no-repeat top left;} 
-.sg-lock{ width: 14px; height: 17px; background-position: -0px -0px; } 
-.sg-twitter{ width: 22px; height: 17px; background-position: -19px -0px; } 
+.sg-prev_slide{ width: 70px; height: 70px; background-position: -0px -0px; } 
+.sg-next_slide{ width: 70px; height: 70px; background-position: -75px -0px; } 
+.sg-btn_yellow{ width: 300px; height: 50px; background-position: -150px -0px; } 
+.sg-btn_yellow:hover{ width: 300px; height: 50px; background-position: -0px -75px; } 
+.sg-btn_blue:hover{ width: 300px; height: 50px; background-position: -0px -130px; } 
+.sg-btn_solid:hover{ width: 300px; height: 50px; background-position: -0px -185px; } 
+.sg-btn_blue{ width: 300px; height: 50px; background-position: -0px -240px; } 
+.sg-btn_solid{ width: 300px; height: 50px; background-position: -0px -295px; } 
+.sg-y-uncheck{ width: 23px; height: 23px; background-position: -305px -75px; } 
+.sg-y-checked{ width: 23px; height: 23px; background-position: -333px -75px; } 
+.sg-search{ width: 20px; height: 20px; background-position: -361px -75px; } 
+.sg-twitter{ width: 22px; height: 17px; background-position: -386px -75px; } 
+.sg-lock{ width: 14px; height: 17px; background-position: -413px -75px; } 
+.sg-clock{ width: 15px; height: 15px; background-position: -150px -55px; } 
+.sg-slider{ width: 15px; height: 15px; background-position: -170px -55px; } 
+.sg-carrousel:active{ width: 14px; height: 14px; background-position: -190px -55px; } 
+.sg-comment{ width: 14px; height: 12px; background-position: -209px -55px; } 
+.sg-down_arrow{ width: 17px; height: 10px; background-position: -228px -55px; } 
+.sg-eye{ width: 17px; height: 10px; background-position: -250px -55px; } 
+.sg-carrousel_inactive{ width: 10px; height: 10px; background-position: -272px -55px; } 
