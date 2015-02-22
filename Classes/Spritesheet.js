@@ -9,7 +9,7 @@
 
 var fs          = require('fs'),
     path        = require('path'),
-    Canvas      = require('node-canvas-bin'),
+    Canvas      = require('canvas-bin'),
     binpacking  = require('binpacking'),
     Image = Canvas.Image;
 
