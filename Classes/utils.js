@@ -7,6 +7,7 @@
  */
 
 var path = require('path'),
+    fs   = require('fs'),
     filesize = require('file-size');
 
 
@@ -38,13 +39,20 @@ Utils.prototype.log = function(){
 };
 
 
+Utils.prototype.warn = function(){
+
+};
+
+Utils.prototype.error = function(){
+
+};
 
 Utils.prototype.extend = function(dest, source){
     for (var prop in source) {
         dest[prop] = source[prop];
     }
 
-    return dest;
+
 };
 
 Utils.prototype.getExtensionName = function(filename){
@@ -72,6 +80,23 @@ Utils.prototype.formatSize = function(raw_size){
     else
         console.log('Require a NUMBER');
 };
+
+
+Utils.prototype.loadTemplate = function(template_name, callback){
+    var template_dir = './templates';
+
+    fs.readFile(template_dir + path.sep + template_name, 'utf8', function (err, html) {
+        if (err) {
+            console.log('Error: ' + err);
+            return;
+        }
+
+        callback(html);
+    });
+};
+
+
+
 
 
 
