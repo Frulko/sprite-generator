@@ -30,7 +30,8 @@ var _CONFIGURATION_ = {
     sprite_output_dir    : 'SpriteOutput',
     export_filename      : 'sprite',
     export_extension     : '.png',
-    optimizing_image     : true
+    optimizing_image     : true,
+
 
 };
 
@@ -61,7 +62,7 @@ Spritesheet.prototype.processing = function(callback){
     that.verifyingSettings();
 
     that.grabImageAssetsFromDirectory(that.settings.dir,function(e){
-        u.log('Spritesheet: outFromDirectory', e);
+        //u.log('Spritesheet: outFromDirectory', e);
 
         var dimensions = that.fitCanvasDimensionsWithImageAssets(e.blocks);
         u.log('Spritesheet: res', dimensions);
@@ -118,8 +119,8 @@ Spritesheet.prototype.grabImageAssetsFromDirectory = function (directory,callbac
                 img.src = raw_img;
 
                 var block = {
-                    w:img.width ,
-                    h:img.height,
+                    w:img.width + this.settings.padding_x,
+                    h:img.height + this.settings.padding_y,
                     img:img,
                     name : u.formatName(filename)
                 };
@@ -127,6 +128,8 @@ Spritesheet.prototype.grabImageAssetsFromDirectory = function (directory,callbac
                 images.push(img);
 
                 blocks.push(block);
+
+
 
             }
         }
@@ -138,9 +141,18 @@ Spritesheet.prototype.grabImageAssetsFromDirectory = function (directory,callbac
 
 Spritesheet.prototype.fitCanvasDimensionsWithImageAssets = function(img_assets){
     u.log('Spritesheet: fitCanvasDimensionsWithImageAssets');
+
+    //console.log(img_assets);
+
+    img_assets.sort(function(a, b){ console.log(a.h, b.h); return (a.h < b.h); });
+    //console.log(img_assets);
+
+
     this.packer.fit(img_assets);
 
 
+
+   /* u.log();
 
     var maxWidth = 0;
     var maxHeight = 0;
@@ -160,12 +172,12 @@ Spritesheet.prototype.fitCanvasDimensionsWithImageAssets = function(img_assets){
                 maxHeight = img_asset.img.height;
         }
     }
-
+*/
 
 
     return {
-        c_width  : maxWidth,
-        c_height : maxHeight
+        c_width  : this.packer.root.w - this.settings.padding_x,
+        c_height : this.packer.root.h - this.settings.padding_y
     };
 };
 
