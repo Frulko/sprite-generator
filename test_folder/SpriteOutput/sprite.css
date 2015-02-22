@@ -1,3 +1,5 @@
-/* GENERATED CSS - 2015-02-20 19:28:58 */ 
-.sg-chrome{background-position: 0px 0px;} 
-.sg-chrome{background-position: 128px 0px;} 
+/* GENERATED CSS - February 22nd 2015, 3:34:52 pm */ 
+.icon{ display:block } 
+[class^="sg-"],[class*="sg-"] { background:url(s_sprite_new.png) no-repeat top left;} 
+.sg-lock{ width: 14px; height: 17px; background-position: -0px -0px; } 
+.sg-twitter{ width: 22px; height: 17px; background-position: -19px -0px; } 
