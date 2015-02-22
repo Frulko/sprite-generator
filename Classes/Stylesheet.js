@@ -62,7 +62,7 @@ Stylesheet.prototype.generateCSS = function (blocks){
  var css = "/* GENERATED CSS - "+date+" */ \n";
 
  if(that.settings.css_span_block){
-     css += '.icon{ display:block } \n';
+     css += '.icon{ display:inline-block; *display:inline; *zoom:1; } \n';
  }
 
  css += '[class^="' + prefix + '"],[class*="' + prefix + '"] { background:url('+ sprite_filename +') no-repeat top left;} \n';
