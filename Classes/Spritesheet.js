@@ -141,38 +141,14 @@ Spritesheet.prototype.grabImageAssetsFromDirectory = function (directory,callbac
 
 Spritesheet.prototype.fitCanvasDimensionsWithImageAssets = function(img_assets){
     u.log('Spritesheet: fitCanvasDimensionsWithImageAssets');
-
-    //console.log(img_assets);
+    
 
     img_assets.sort(function(a, b){ console.log(a.h, b.h); return (a.h < b.h); });
-    //console.log(img_assets);
 
 
     this.packer.fit(img_assets);
 
 
-
-   /* u.log();
-
-    var maxWidth = 0;
-    var maxHeight = 0;
-
-    for(var n = 0 ; n < img_assets.length ; n++) {
-        var img_asset = img_assets[n];
-
-        //Change this to detect tall or with of element and adapt canvas dimension to this.
-        if (img_asset.fit) {
-            if(img_asset.fit.x > maxWidth)
-                maxWidth = img_asset.fit.x + img_asset.img.width;
-
-            if(img_asset.fit.y > maxHeight)
-                maxHeight = img_asset.fit.y + img_asset.img.height;
-
-            if(img_asset.fit.y == 0)
-                maxHeight = img_asset.img.height;
-        }
-    }
-*/
 
 
     return {
