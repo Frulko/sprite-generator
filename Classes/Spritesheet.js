@@ -30,7 +30,7 @@ var _CONFIGURATION_ = {
     sprite_output_dir    : 'SpriteOutput',
     export_filename      : 'sprite',
     export_extension     : '.png',
-    optimizing_image     : true,
+    optimizing_image     : false
 
 
 };
@@ -141,11 +141,11 @@ Spritesheet.prototype.grabImageAssetsFromDirectory = function (directory,callbac
 
 Spritesheet.prototype.fitCanvasDimensionsWithImageAssets = function(img_assets){
     u.log('Spritesheet: fitCanvasDimensionsWithImageAssets');
+
+
+    img_assets.sort(function(a, b){ return (b.w - a.w); });
+    img_assets.sort(function(a, b){ return (b.h - a.h); });
     
-
-    img_assets.sort(function(a, b){ console.log(a.h, b.h); return (a.h < b.h); });
-
-
     this.packer.fit(img_assets);
 
 
