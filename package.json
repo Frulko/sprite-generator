@@ -10,12 +10,11 @@
     "file-size": "0.0.5",
     "html": "0.0.7",
     "moment": "^2.9.0",
-    "node-canvas-bin": "git+https://github.com/mauritslamers/node-canvas-bin.git",
-    "pngquant-bin": "^2.0.1",
-    "moment": "^2.9.0"
+    "node-imagehelper": "^1.0.0",
+    "pngquant-bin": "^2.0.1"
   },
   "devDependencies": {
-
+    "node-imagehelper": "^1.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

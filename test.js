@@ -38,6 +38,45 @@ sprite.processing(function(e){
     
 });
 
+
+var settings = {
+    working_directory : '',
+    save_settings     : true,
+    debug             : false,
+    log               : true,
+    backup_previous   : true,
+    output            : {
+        up_directory : false,
+        style    : '',
+        sprite   : ''
+    },
+    style             : {
+        type : 'css',
+        icon : true,
+        prefix : 's-',
+        rules : [
+            {'_hover' : ':hover'},
+            {'_active' : ':active'}
+        ]
+    },
+    sprite            : {
+        name        : 'sprite',
+        compression : true,
+        engine      : 'pngquant', //In the futur
+        arrangement : 'vertical', //horizontal , auto
+        out_directory : 'SpriteGeneration',
+        html_preview : true,
+        padding           : {
+            top     : 0,
+            left    : 0
+        }
+    }
+};
+
+/*spriteGen(settings, function () {
+
+});*/
+
 /*sprite.grabImageAssetsFromDirectory('./test_folder', function(){
     console.log('SUCCESS GRABBING')
 });*/

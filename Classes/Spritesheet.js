@@ -9,9 +9,8 @@
 
 var fs          = require('fs'),
     path        = require('path'),
-    Canvas      = require('canvas-bin'),
-    binpacking  = require('binpacking'),
-    Image = Canvas.Image;
+
+
 
 var execFile = require('child_process').execFile;
 var pngquant = require('pngquant-bin').path;
@@ -42,7 +41,7 @@ var Spritesheet = function Spritesheet(settings){
 
 	//Properties
     //TODO var Packer = binpacking.Packer; WHY ? Read doc !
-    var GrowingPacker = binpacking.GrowingPacker;
+
     this.packer = new GrowingPacker;
     this.canvas = new Canvas(0, 0);
     this.ctx = this.canvas.getContext('2d');
