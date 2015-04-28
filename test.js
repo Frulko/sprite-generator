@@ -1,12 +1,13 @@
-var Spritesheet = require('./Classes/Spritesheet');
-var Settings    = require('./Classes/Settings');
-var Stylesheet  = require('./Classes/Stylesheet');
+var Sprite      = require('./Classes/Sprite'),
+    Settings    = require('./Classes/Settings'),
+    Stylesheet  = require('./Classes/Stylesheet'),
+    u           = new(require('./Classes/utils'))();
 
-var u           = new(require('./Classes/utils'))(); //Call and create a new Utils
+
 u.debug = false;
 
 //TODO GULP OR BRUNCH JSHINT
-var settings = new Settings({
+/*var settings = new Settings({
 
     dir              : './test_folder',
     sprite_name      : 's_sprite_new',
@@ -24,8 +25,6 @@ settings.loadJSONFile(function(json){
     u.log(json);
 });
 
-//settings.generateConfigFile();
-
 
 
 var sprite = new Spritesheet(settings);
@@ -36,11 +35,11 @@ sprite.processing(function(e){
     stylesheet.setSettings(settings);
     stylesheet.generateCSS(e);
     
-});
+});*/
 
 
 var settings = {
-    working_directory : '',
+    working_directory : 'test_folder',
     save_settings     : true,
     debug             : false,
     log               : true,
@@ -73,6 +72,10 @@ var settings = {
     }
 };
 
+
+//Sprite.getImages(settings.working_directory);
+var sprite = new Sprite(settings);
+console.log(sprite.getImages(settings.working_directory));
 /*spriteGen(settings, function () {
 
 });*/
