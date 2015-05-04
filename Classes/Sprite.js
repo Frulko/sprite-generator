@@ -39,7 +39,7 @@ var Spritesheet = function Spritesheet(settings){
 Spritesheet.prototype.getImages = function(cb){
     u.log('Spritesheet: getImages');
     var callback = cb || (function () {});
-    imageHelper.getImageFromFolder(this.settings.working_directory, function(files){
+    imageHelper.getImagesFromFolder(this.settings.working_directory, function(files){
         callback(files);
     });
 };
