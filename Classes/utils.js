@@ -82,10 +82,9 @@ Utils.prototype.formatSize = function(raw_size){
 };
 
 
-Utils.prototype.loadTemplate = function(template_name, callback){
-    var template_dir = './templates';
+Utils.prototype.loadTemplate = function(template, callback){
 
-    fs.readFile(template_dir + path.sep + template_name, 'utf8', function (err, html) {
+    fs.readFile(template, 'utf8', function (err, html) {
         if (err) {
             console.log('Error: ' + err);
             return;
