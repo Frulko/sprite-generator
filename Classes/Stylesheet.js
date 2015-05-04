@@ -12,7 +12,7 @@ var fs          = require('fs'),
     html        = require('html');
 
 var u = new(require('./utils'))();
-u.debug = false;
+u.debug = true;
 
 
 var css_rules = [
@@ -24,10 +24,14 @@ var Stylesheet = function Stylesheet(settings){
  u.log('Stylesheet: constructor');
     //Properties
 
- this.settings = settings; //TODO NEED A CONTROL
  this.settings_loaded = false;
 
+    if(u.isUndefined(settings)){
+        console.log('You need to specify settings object');
+        return [];
+    }
 
+    this.settings = settings.getSettings();
 
 };
 
@@ -48,24 +52,25 @@ Stylesheet.prototype.verifyingSettings = function(){
 
 };
 
-Stylesheet.prototype.generateCSS = function (blocks){
+Stylesheet.prototype.generateCSS = function (blocks, cb){
  u.log('Stylesheet: generateCSS');
 
- var date = moment().format('MMMM Do YYYY, h:mm:ss a'); //TODO REPLACE WITH MOMENT.JS
- var prefix = this.settings.css_prefix;
+    var callback = cb || (function () {});
+ var date = moment().format('MMMM Do YYYY, h:mm:ss a');
+ var prefix = this.settings.style.css_prefix;
  var that = this;
 
- var name = this.settings.sprite_name;
- var sprite_filename =  name + '.png';
 
+ var sprite_filename =  this.settings.sprite.name + '.png';
 
  var css = "/* GENERATED CSS - "+date+" */ \n";
+    css_rules = this.settings.style.rules;
 
- if(that.settings.css_span_block){
+ if(that.settings.style.icon){
      css += '.icon{ display:inline-block; *display:inline; *zoom:1; } \n';
  }
 
- css += '[class^="' + prefix + '"],[class*="' + prefix + '"] { background:url('+ sprite_filename +') no-repeat top left;} \n';
+ css += '[class^="' + this.settings.style.prefix + '"],[class*="' + this.settings.style.prefix + '"] { background:url('+ sprite_filename +') no-repeat top left;} \n';
 
  var css_items = [];
 
@@ -84,7 +89,7 @@ Stylesheet.prototype.generateCSS = function (blocks){
      var keys = Object.keys(rule);
      //classname = classname.replace(j, rule);
 
-      u.log(classname.indexOf(keys[0]) + ' --- ' + keys[0].length);
+      //u.log(classname.indexOf(keys[0]) + ' --- ' + keys[0].length);
      if(classname.indexOf(keys[0]) > -1){
         classname = classname.replace(keys[0], rule[keys]);
          custom_rule = true;
@@ -97,29 +102,28 @@ Stylesheet.prototype.generateCSS = function (blocks){
   }
 
      if(!custom_rule){
-         css_items.push(that.settings.css_prefix + classname);
+         css_items.push(that.settings.style.prefix + classname);
      }
 
 
 
-      css += '.' + prefix + classname + "{ width: " + (block.w - that.settings.padding_x) + "px; height: " + (block.h - that.settings.padding_y) + "px; background-position: -"+block.fit.x+"px -"+block.fit.y+"px; } \n";
+      css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.padding.left) + "px; height: " + (block.height - that.settings.sprite.padding.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
 
 
 
  }
+    //Todo custom dir / default inside
+    var output_directory = this.settings.working_directory + path.sep + this.settings.sprite.out_directory;
 
 
- var sprite_dir = this.settings.dir + path.sep + "SpriteOutput";
- u.log(this.settings);
 
- fs.writeFile(sprite_dir + path.sep + 'sprite.css', css, function(err) {
+ fs.writeFile(output_directory + path.sep + 'sprite.css', css, function(err) {
   if(err) {
    u.log(err);
   } else {
-   u.log('[SUCCESS] css file saved');
-
+   u.log('Stylesheet: SUCCESS - css file saved');
    that.generateHTML(css_items);
-
+    callback();
   }
  });
 
@@ -130,19 +134,21 @@ Stylesheet.prototype.generateCSS = function (blocks){
 
 Stylesheet.prototype.generateHTML = function (css_items){
 
-
-    var sprite_dir = this.settings.dir + path.sep + "SpriteOutput";
-    u.loadTemplate('html_generate.dot', function(d){
+    var output_directory = this.settings.working_directory + path.sep + this.settings.sprite.out_directory;
+    	
+    var tpl = path.join(__dirname , '..' + path.sep + 'templates' + path.sep +'html_generate.dot');    
+    //console.log()
+    u.loadTemplate(tpl, function(d){
         var tempFn = doT.template(d);
         var resultText = tempFn({items: css_items});
 
         var prettyData = html.prettyPrint(resultText, {indent_size: 2});
 
-        fs.writeFile(sprite_dir + path.sep + 'sprite.html', prettyData, function(err) {
+        fs.writeFile(output_directory + path.sep + 'sprite.html', prettyData, function(err) {
             if(err) {
                 u.log(err);
             } else {
-                u.log('[SUCCESS] html file saved');
+                u.log('Stylesheet: SUCCESS - html file saved');
 
             }
         });
