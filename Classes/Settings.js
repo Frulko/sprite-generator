@@ -22,8 +22,8 @@ var default_settings = {
     backup_previous   : true,
     output            : {
         up_directory : false,
-        stylesheet    : '',
-        sprite   : ''
+        stylesheet    : 'css',
+        sprite   : false
     },
     style             : {
         type : 'css',
@@ -142,6 +142,63 @@ Settings.prototype.generateConfigFile = function (){
 			console.log('[SUCCESS] settings saved');
 		}
 	});
+};
+
+Settings.prototype.getOutputPath = function (context) {
+
+	var final_path = '';
+	if (!default_settings.output.up_directory) {
+		final_path = path.join(default_settings.working_directory, default_settings.sprite.out_directory);
+	}
+
+	switch (context) {
+		case 'sprite':
+
+			if (default_settings.output.sprite) {
+				final_path = path.join(default_settings.output.sprite);
+			}
+			break;
+		case 'stylesheet':
+			if (default_settings.output.stylesheet) {
+				final_path = path.join(default_settings.output.stylesheet);
+			}
+			break;
+		case 'html':
+
+			break;
+		default:
+
+
+		break;
+	}
+	//console.log(final_path);
+	return final_path;
+};
+
+Settings.prototype.getRelativePath = function (type) {
+	var out = {
+		sprite_directory : this.getOutputPath('sprite'),
+		style_directory : this.getOutputPath('stylesheet'),
+		html_directory : this.getOutputPath('html')
+	};
+
+
+	//console.log({html: html_directory, sprite: sprite_directory, style: style_directory});
+	var nb_sub_folder = out.html_directory.split( path.sep ).length;
+	var t_reverse = [];
+	for(var i =0; i<nb_sub_folder;  i++){
+		t_reverse.push('..');
+	}
+	t_reverse.push(out[type]);
+
+	var t = '';
+	if( out.html_directory.indexOf(out[type]) == -1) {
+		t = path.join.apply(this, t_reverse);
+	} else {
+		t =  out.html_directory;
+	}
+
+	return t;
 };
 
 

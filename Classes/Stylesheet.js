@@ -30,7 +30,7 @@ var Stylesheet = function Stylesheet(settings){
         console.log('You need to specify settings object');
         return [];
     }
-
+    this.settings_instance = settings;
     this.settings = settings.getSettings();
 
 };
@@ -60,8 +60,9 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
  var prefix = this.settings.style.css_prefix;
  var that = this;
 
-
- var sprite_filename =  this.settings.sprite.name + '.png';
+ var relative_sprite = this.settings_instance.getRelativePath('sprite_directory');
+ console.log(relative_sprite);
+ var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
 
  var css = "/* GENERATED CSS - "+date+" */ \n";
     css_rules = this.settings.style.rules;
@@ -113,11 +114,11 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
  }
     //Todo custom dir / default inside
-    var output_directory = this.settings.working_directory + path.sep + this.settings.sprite.out_directory;
+    var output_directory = this.settings_instance.getOutputPath('stylesheet');
 
 
 
- fs.writeFile(output_directory + path.sep + 'sprite.css', css, function(err) {
+ fs.writeFile(path.join(output_directory, 'sprite.css'), css, function(err) {
   if(err) {
    u.log(err);
   } else {
@@ -134,17 +135,29 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
 Stylesheet.prototype.generateHTML = function (css_items){
 
-    var output_directory = this.settings.working_directory + path.sep + this.settings.sprite.out_directory;
-    	
-    var tpl = path.join(__dirname , '..' + path.sep + 'templates' + path.sep +'html_generate.dot');    
+    var output_directory = this.settings_instance.getOutputPath('html');
+    var self = this;
+    if(output_directory.length > 0 && !fs.existsSync(output_directory)){
+        fs.mkdirSync(output_directory, '0766', function(err){
+            if(err){
+                throw(err);
+            }
+        });
+    }
+
+    var tpl = path.join(__dirname , '..' + path.sep + 'templates' + path.sep +'html_generate.dot');
     //console.log()
+
+
+
     u.loadTemplate(tpl, function(d){
         var tempFn = doT.template(d);
-        var resultText = tempFn({items: css_items});
+        var style_path = path.join(self.settings_instance.getRelativePath('style_directory'), 'sprite.css');
+        var resultText = tempFn({items: css_items, css_path: style_path});
 
         var prettyData = html.prettyPrint(resultText, {indent_size: 2});
 
-        fs.writeFile(output_directory + path.sep + 'sprite.html', prettyData, function(err) {
+        fs.writeFile(path.join(output_directory,'sprite.html'), prettyData, function(err) {
             if(err) {
                 u.log(err);
             } else {

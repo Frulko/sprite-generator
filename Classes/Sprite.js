@@ -29,7 +29,7 @@ var Spritesheet = function Spritesheet(settings){
         console.log('You need to specify settings object');
         return [];
     }
-
+    this.settings_instance = settings;
     this.settings = settings.getSettings();
 
 
@@ -99,9 +99,9 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
     u.log('Spritesheet: saveSpriteSheet');
 
     //Todo custom dir / default inside
-    var output_directory = this.settings.working_directory + path.sep + this.settings.sprite.out_directory;
-    console.log(output_directory);
-    if(!fs.existsSync(output_directory)){
+    var output_directory = this.settings_instance.getOutputPath('sprite');
+
+    if(output_directory.length > 0 && !fs.existsSync(output_directory)){
         fs.mkdirSync(output_directory, '0766', function(err){
             if(err){
                 throw(err);
@@ -112,7 +112,7 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
 
     var spriteImage = {
         canvas : {
-            name : output_directory + path.sep + this.settings.sprite.name + '.png', //Todo custom dir / default inside
+            name : path.join(output_directory, this.settings.sprite.name + '.png'), //Todo custom dir / default inside
             width : binPacking.root.w,
             height : binPacking.root.h
         },

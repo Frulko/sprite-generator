@@ -36,7 +36,10 @@
 
 
     </style>
-    <link rel="stylesheet" href="sprite.css">
+    <link rel="stylesheet" href="{{= it.css_path}}">
+    <style media="screen">
+        {{= it.style_override}}
+    </style>
   </head>
   <body>
 
@@ -72,5 +75,3 @@
 
   </body>
 </html>
-
-
