@@ -106,7 +106,8 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
          css_items.push(that.settings.style.prefix + classname);
      }
 
-
+     classname = classname.split(path.sep);
+     classname = classname[classname-1];
 
       css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.padding.left) + "px; height: " + (block.height - that.settings.sprite.padding.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
 
