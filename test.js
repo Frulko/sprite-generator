@@ -9,8 +9,13 @@ u.debug = false;
 
 
 var settings = new Settings({
-    style : {
-        type : 'less'
+    working_directory: 'themes/theme_nq/img/sprite/',
+    output: {
+        stylesheet: 'themes/theme_nq/css/',
+
+    },
+    style: {
+        type: 'less'
     }
 });
 
@@ -31,5 +36,3 @@ sprite.processing(function (res, err){
     }
 
 });
-
-
