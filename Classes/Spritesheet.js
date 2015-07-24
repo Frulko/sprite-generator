@@ -1,9 +1,9 @@
-/* 
-	
+/*
+
 	Spritesheet Class
 	Author: Guillaume Dumoulin @Frulko
 	Date: 19/02/2015
-	
+
 */
 
 
@@ -144,7 +144,7 @@ Spritesheet.prototype.fitCanvasDimensionsWithImageAssets = function(img_assets){
 
     img_assets.sort(function(a, b){ return (b.w - a.w); });
     img_assets.sort(function(a, b){ return (b.h - a.h); });
-    
+
     this.packer.fit(img_assets);
 
 
@@ -200,11 +200,13 @@ Spritesheet.prototype.saveSpriteSheet = function (callback){
     var that = this;
     var name = this.settings.sprite_name;
 
-    this.output_dir = this.settings.dir + path.sep + _CONFIGURATION_.sprite_output_dir;
+    console.log(this.settings);
+    return;
+    //this.output_dir = this.settings.getOutputPath('stylesheet');
     this.export_path = this.output_dir + path.sep + name + _CONFIGURATION_.export_extension;
 
 
-    u.log(this.output_dir)
+    u.log(this.output_dir, Settings.getOutputPath('sprite'))
 
     if(!fs.existsSync(this.output_dir)){
         fs.mkdirSync(this.output_dir, _CONFIGURATION_.folder_permission, function(err){
