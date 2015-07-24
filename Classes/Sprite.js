@@ -131,6 +131,30 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
 };
 
 
+Spritesheet.prototype.optimizingSpritesheet = function(callback){
+    u.log('Spritesheet: optimizingSpritesheet');
+
+    var old_file = this.export_path;
+    var optimized_file = this.output_dir + path.sep + this.settings.sprite_name + _CONFIGURATION_.sprite_suffix + _CONFIGURATION_.export_extension; //TODO ADD BY DEFAULT IN CONF BUT CAN BE SETTING FILE
+
+    if(fs.existsSync(optimized_file))
+        fs.unlinkSync(optimized_file); //Remove if exist
+
+    execFile(pngquant, ['-o', optimized_file, old_file], function (err) {
+
+        if (err) {
+            throw err;
+        }
+
+        var file_stat = fs.statSync(optimized_file);
+        var file_size = u.formatSize(file_stat.size);
+        u.log('[SUCCESS] optimized sprite ['+file_size+']');
+
+        callback();
+    });
+
+};
+
 
 
 

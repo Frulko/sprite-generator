@@ -22,7 +22,7 @@ var default_settings = {
     backup_previous   : true,
     output            : {
         up_directory : false,
-        stylesheet    : 'css',
+        stylesheet    : false,
         sprite   : false
     },
     style             : {
@@ -65,7 +65,7 @@ Settings.prototype.override = function (settings) {
 
     u.log('Settings: override');
     this.parseObject(default_settings, settings);
-
+	console.log(default_settings);
     //u.log(Object.keys(default_settings));
 };
 
