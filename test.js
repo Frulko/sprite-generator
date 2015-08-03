@@ -12,10 +12,9 @@ var settings = new Settings({
     working_directory: 'themes/theme_nq/img/sprite/',
     output: {
         stylesheet: 'themes/theme_nq/css/',
-
     },
     style: {
-        type: 'less'
+        type: 'scss'
     }
 });
 

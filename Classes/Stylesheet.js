@@ -21,7 +21,7 @@ var css_rules = [
 ];
 
 var Stylesheet = function Stylesheet(settings){
- u.log('Stylesheet: constructor');
+
     //Properties
 
  this.settings_loaded = false;
@@ -32,7 +32,9 @@ var Stylesheet = function Stylesheet(settings){
     }
     this.settings_instance = settings;
     this.settings = settings.getSettings();
+    u.debug = this.settings.debug;
 
+    u.log('Stylesheet: constructor');
 };
 
 Stylesheet.prototype.setSettings = function(settings){
@@ -61,7 +63,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
  var that = this;
 
  var relative_sprite = this.settings_instance.getRelativePath('sprite_directory');
- console.log(relative_sprite);
+ u.log(relative_sprite);
  var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
 
  var css = "/* GENERATED CSS - "+date+" */ \n";
@@ -109,7 +111,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
      classname = classname.split(path.sep);
      classname = classname[classname.length-1];
 
-      css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.padding.left) + "px; height: " + (block.height - that.settings.sprite.padding.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
+      css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.margin.left) + "px; height: " + (block.height - that.settings.sprite.margin.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
 
 
 
@@ -119,7 +121,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
 
 
- fs.writeFile(path.join(output_directory, 'sprite.css'), css, function(err) {
+ fs.writeFile(path.join(output_directory, this.settings_instance.getStylesheetFilename()), css, function(err) {
   if(err) {
    u.log(err);
   } else {

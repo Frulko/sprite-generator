@@ -23,7 +23,7 @@ u.debug = true;
 
 
 var Spritesheet = function Spritesheet(settings){
-    u.log('Spritesheet: constructor');
+
 
     if(u.isUndefined(settings)){
         console.log('You need to specify settings object');
@@ -31,17 +31,23 @@ var Spritesheet = function Spritesheet(settings){
     }
     this.settings_instance = settings;
     this.settings = settings.getSettings();
-
-
+    u.debug = this.settings.debug;
+    
+    u.log('Spritesheet: constructor');
 };
 
 //TODO : transform into a promise
 Spritesheet.prototype.getImages = function(cb){
     u.log('Spritesheet: getImages');
     var callback = cb || (function () {});
-    imageHelper.getImagesFromFolder(this.settings.working_directory, function(files){
-        callback(files);
-    });
+    if (this.settings.working_directory !== '') {
+        imageHelper.getImagesFromFolder(this.settings.working_directory, function(files){
+            callback(files);
+        });
+    } else {
+        console.log('Spritesheet: no working directory specified');
+    }
+
 };
 
 
@@ -69,8 +75,8 @@ Spritesheet.prototype.fitImagesIntoCanvas = function (images, cb){
         return {
             filename: item.filename,
             name : name,
-            w: item.width + self.settings.sprite.padding.left,
-            h: item.height + self.settings.sprite.padding.top
+            w: item.width + self.settings.sprite.margin.left,
+            h: item.height + self.settings.sprite.margin.top
         };
     });
 
@@ -135,6 +141,7 @@ Spritesheet.prototype.optimizingSpritesheet = function(callback){
     u.log('Spritesheet: optimizingSpritesheet');
 
     var old_file = this.export_path;
+    var output_directory = this.settings_instance.getOutputPath('sprite');
     var optimized_file = this.output_dir + path.sep + this.settings.sprite_name + _CONFIGURATION_.sprite_suffix + _CONFIGURATION_.export_extension; //TODO ADD BY DEFAULT IN CONF BUT CAN BE SETTING FILE
 
     if(fs.existsSync(optimized_file))
