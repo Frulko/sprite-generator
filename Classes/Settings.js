@@ -15,10 +15,10 @@ u.debug = true;
 
 
 var default_settings = {
-    working_directory : 'test_folder',
+    working_directory : '',
     save_settings     : true,
     debug             : false,
-    log               : true,
+    log               : false,
     backup_previous   : true,
     output            : {
         up_directory : false,
@@ -27,7 +27,8 @@ var default_settings = {
     },
     style             : {
         type : 'css',
-        icon : true,
+		name : '',
+        icon : false,
         prefix : 's-',
         rules : [
             {'_hover' : ':hover'},
@@ -40,17 +41,17 @@ var default_settings = {
         engine        : 'pngquant', //In the futur
         arrangement   : 'vertical', //horizontal , auto
         out_directory : 'SpriteGeneration',
-        html_preview  : true,
-        padding       : {
-            top       : 0,
-            left      : 0
+        html_preview  : false,
+        margin       : {
+            top   : 5,
+            left  : 5
         }
     }
 };
 
 
 var Settings = function Settings(settings){
-	u.log('Settings: constructor');
+
     //Properties
 	this.settings_loaded = false;
 
@@ -59,14 +60,17 @@ var Settings = function Settings(settings){
 	//u.extend(default_settings, settings);
     //console.log(default_settings.style)
     this.override(settings);
+	u.debug = default_settings.debug;
+
+	u.log('Settings: constructor');
 };
 
 Settings.prototype.override = function (settings) {
 
-    u.log('Settings: override');
+
     this.parseObject(default_settings, settings);
-	console.log(default_settings);
     //u.log(Object.keys(default_settings));
+
 };
 
 Settings.prototype.parseObject = function (object, compareObject){
@@ -199,6 +203,15 @@ Settings.prototype.getRelativePath = function (type) {
 	}
 
 	return t;
+};
+
+
+Settings.prototype.getStylesheetFilename = function () {
+	if(default_settings.style.name.length < 1){
+		return default_settings.sprite.name  + '.' +  default_settings.style.type;
+	}
+
+	return default_settings.style.name + '.' + default_settings.style.type;
 };
 
 
