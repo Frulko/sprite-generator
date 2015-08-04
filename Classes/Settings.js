@@ -13,7 +13,7 @@ var fs          = require('fs'),
 var u = new(require('./utils'))();
 u.debug = true;
 
-
+var settings_config_file = '.spriteconfig';
 var default_settings = {
     working_directory : '',
     save_settings     : true,
@@ -23,7 +23,7 @@ var default_settings = {
     output            : {
         up_directory : false,
         stylesheet    : false,
-        sprite   : false
+        spritesheet   : false
     },
     style             : {
         type : 'css',
@@ -40,7 +40,7 @@ var default_settings = {
         compression   : true,
         engine        : 'pngquant', //In the futur
         arrangement   : 'vertical', //horizontal , auto
-        out_directory : 'SpriteGeneration',
+        preview_directory : 'SpritePreview',
         html_preview  : false,
         margin       : {
             top   : 5,
@@ -101,45 +101,51 @@ Settings.prototype.getSettings = function (){
 };
 
 //Settings.prototype.testSprite = function(){};
+Settings.prototype.getConfigPath = function () {
+	return path.join(default_settings.working_directory, settings_config_file);
 
+};
 
-Settings.prototype.checkConfigFile = function (file_path, cb){
+Settings.prototype.checkConfigFile = function (cb){
+	cb = cb || (function () {});
 	u.log('Settings: checkConfigFile');
 
-	fs.exists(file_path, function(exists) {
+	fs.exists(this.getConfigPath(), function(exists) {
 		cb(exists);
 	});
 
 }
 
 
-Settings.prototype.loadJSONFile = function(cb){
+Settings.prototype.loadConfig = function(cb){
+	cb = cb || (function () {});
+	var self = this;
 	u.log('Settings: loadJSONFile');
-	var sprite_dir = this.dir + path.sep + "SpriteOutput" + path.sep + 'settings.json';
 
-	this.checkConfigFile(sprite_dir, function(){
-		fs.readFile(sprite_dir, 'utf8', function (err, data) {
-			if (err) {
-				console.log('Error: ' + err);
-				return;
-			}
 
-			cb(JSON.parse(data));
-		});
+	this.checkConfigFile(function(exist){
+		if(exist) {
+			fs.readFile(self.getConfigPath(), 'utf8', function (err, data) {
+				if (err) {
+					console.log('Error: ' + err);
+					return;
+				}
+
+				cb(data);
+			});
+		} else {
+			cb(false);
+		}
+
 	});
-
-
 
 
 }
 
-Settings.prototype.generateConfigFile = function (){
+Settings.prototype.saveConfigFile = function (){
 	u.log('Settings: generateConfigFile');
 
-	var sprite_dir = this.dir + path.sep + "SpriteOutput";
-	u.log(sprite_dir);
-
-	fs.writeFile(sprite_dir + path.sep + 'settings.json', JSON.stringify(this, null, '\t'), function(err) {
+	fs.writeFile(this.getConfigPath(), JSON.stringify(default_settings, null, '\t'), function(err) {
 		if(err) {
 			console.log(err);
 		} else {
@@ -152,14 +158,15 @@ Settings.prototype.getOutputPath = function (context) {
 
 	var final_path = '';
 	if (!default_settings.output.up_directory) {
-		final_path = path.join(default_settings.working_directory, default_settings.sprite.out_directory);
+		var preview_directory = default_settings.sprite.preview_directory.length < 1 ? 'SpritePreview' : default_settings.sprite.preview_directory;
+		final_path = path.join(default_settings.working_directory, preview_directory);
 	}
 
 	switch (context) {
 		case 'sprite':
 
-			if (default_settings.output.sprite) {
-				final_path = path.join(default_settings.output.sprite);
+			if (default_settings.output.spritesheet) {
+				final_path = path.join(default_settings.output.spritesheet);
 			}
 			break;
 		case 'stylesheet':
@@ -179,30 +186,24 @@ Settings.prototype.getOutputPath = function (context) {
 	return final_path;
 };
 
-Settings.prototype.getRelativePath = function (type) {
-	var out = {
-		sprite_directory : this.getOutputPath('sprite'),
-		style_directory : this.getOutputPath('stylesheet'),
-		html_directory : this.getOutputPath('html')
+Settings.prototype.getRelativePath = function (from_foler, to_folder) {
+
+	var folders = {
+		sprite : path.resolve(this.getOutputPath('sprite')),
+		style : path.resolve(this.getOutputPath('stylesheet')),
+		html : path.resolve(this.getOutputPath('html'))
 	};
 
 
-	//console.log({html: html_directory, sprite: sprite_directory, style: style_directory});
-	var nb_sub_folder = out.html_directory.split( path.sep ).length;
-	var t_reverse = [];
-	for(var i =0; i<nb_sub_folder;  i++){
-		t_reverse.push('..');
-	}
-	t_reverse.push(out[type]);
 
-	var t = '';
-	if( out.html_directory.indexOf(out[type]) == -1) {
-		t = path.join.apply(this, t_reverse);
-	} else {
-		t =  out.html_directory;
-	}
+	if(typeof from_foler === 'undefined' || typeof to_folder === 'undefined' || typeof folders[from_foler] === 'undefined' || typeof folders[to_folder] === 'undefined') {
+		console.log('Error getRelativePath');
+		return false;
+	} 
 
-	return t;
+
+
+	return path.relative(folders[from_foler], folders[to_folder]);
 };
 
 
