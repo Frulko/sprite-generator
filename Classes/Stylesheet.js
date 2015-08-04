@@ -62,7 +62,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
  var prefix = this.settings.style.css_prefix;
  var that = this;
 
- var relative_sprite = this.settings_instance.getRelativePath('sprite_directory');
+ var relative_sprite = this.settings_instance.getRelativePath('style', 'sprite');
  u.log(relative_sprite);
  var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
 
@@ -121,15 +121,19 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
 
 
- fs.writeFile(path.join(output_directory, this.settings_instance.getStylesheetFilename()), css, function(err) {
-  if(err) {
-   u.log(err);
-  } else {
-   u.log('Stylesheet: SUCCESS - css file saved');
-   that.generateHTML(css_items);
-    callback();
-  }
- });
+    fs.writeFile(path.join(output_directory, this.settings_instance.getStylesheetFilename()), css, function(err) {
+        if(err) {
+            u.log(err);
+        } else {
+            u.log('Stylesheet: SUCCESS - css file saved');
+
+            if (that.settings.html_preview) {
+                that.generateHTML(css_items);
+            }
+
+            callback();
+        }
+    });
 
 
 
@@ -155,7 +159,7 @@ Stylesheet.prototype.generateHTML = function (css_items){
 
     u.loadTemplate(tpl, function(d){
         var tempFn = doT.template(d);
-        var style_path = path.join(self.settings_instance.getRelativePath('style_directory'), 'sprite.css');
+        var style_path = path.join(self.settings_instance.getRelativePath('style', 'sprite'), this.settings_instance.getStylesheetFilename());
         var resultText = tempFn({items: css_items, css_path: style_path});
 
         var prettyData = html.prettyPrint(resultText, {indent_size: 2});
