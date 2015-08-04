@@ -32,7 +32,7 @@ var Spritesheet = function Spritesheet(settings){
     this.settings_instance = settings;
     this.settings = settings.getSettings();
     u.debug = this.settings.debug;
-    
+
     u.log('Spritesheet: constructor');
 };
 
@@ -102,6 +102,7 @@ Spritesheet.prototype.fitImagesIntoCanvas = function (images, cb){
 
 Spritesheet.prototype.saveSpriteSheet = function (images, cb){
     var callback = cb || (function () {});
+    var self = this;
     u.log('Spritesheet: saveSpriteSheet');
 
     //Todo custom dir / default inside
@@ -131,8 +132,18 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
             return false;
         }
 
-        res.sprite = spriteImage;
-        callback(res, err);
+        if(self.settings.sprite.compression){
+            console.log('compression')
+            self.optimizingSpritesheet(function () {
+                res.sprite = spriteImage;
+                callback(res, err);
+            });
+        } else {
+            console.log('no compression')
+            res.sprite = spriteImage;
+            callback(res, err);
+        }
+
     });
 };
 
@@ -140,22 +151,26 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
 Spritesheet.prototype.optimizingSpritesheet = function(callback){
     u.log('Spritesheet: optimizingSpritesheet');
 
-    var old_file = this.export_path;
+
     var output_directory = this.settings_instance.getOutputPath('sprite');
-    var optimized_file = this.output_dir + path.sep + this.settings.sprite_name + _CONFIGURATION_.sprite_suffix + _CONFIGURATION_.export_extension; //TODO ADD BY DEFAULT IN CONF BUT CAN BE SETTING FILE
+    var optimized_sprite_path = path.join(output_directory, this.settings.sprite.name + '-pngquant.png');
+    var sprite_path = path.join(output_directory, this.settings.sprite.name + '.png');
 
-    if(fs.existsSync(optimized_file))
-        fs.unlinkSync(optimized_file); //Remove if exist
+    if(fs.existsSync(optimized_sprite_path))
+        fs.unlinkSync(optimized_sprite_path); //Remove if exist
 
-    execFile(pngquant, ['-o', optimized_file, old_file], function (err) {
+    execFile(pngquant, ['-o', optimized_sprite_path, sprite_path], function (err) {
 
         if (err) {
             throw err;
         }
 
-        var file_stat = fs.statSync(optimized_file);
+        var file_stat = fs.statSync(optimized_sprite_path);
         var file_size = u.formatSize(file_stat.size);
         u.log('[SUCCESS] optimized sprite ['+file_size+']');
+
+        fs.unlinkSync(sprite_path);
+        fs.renameSync(optimized_sprite_path, sprite_path);        
 
         callback();
     });
