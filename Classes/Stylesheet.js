@@ -173,9 +173,10 @@ Stylesheet.prototype.generateHTML = function (css_items){
             }
         });
     });
+};
 
-
-
+Stylesheet.prototype.getOutputFile = function () {
+    return path.resolve(path.join(this.settings_instance.getOutputPath('stylesheet'), this.settings_instance.getStylesheetFilename()));
 };
 
 

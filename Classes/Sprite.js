@@ -13,6 +13,7 @@ var fs          = require('fs'),
     pngquant    = require('pngquant-bin').path,
     binPacking   = require('../packer'),
     imageHelper = require('node-imagehelper'),
+    events      = require('events'),
     u           = new(require('./utils'))();
 
 
@@ -36,12 +37,24 @@ var Spritesheet = function Spritesheet(settings){
     u.log('Spritesheet: constructor');
 };
 
+Spritesheet.prototype = new events.EventEmitter;
+
+
 //TODO : transform into a promise
 Spritesheet.prototype.getImages = function(cb){
     u.log('Spritesheet: getImages');
     var callback = cb || (function () {});
+    var self = this;
+
     if (this.settings.working_directory !== '') {
         imageHelper.getImagesFromFolder(this.settings.working_directory, function(files){
+            files = files.filter(function (file) {
+                var re = new RegExp(self.settings.sprite.name + '\.png$', 'i'); //exclude self file
+                var match = file.filename.match(re);
+                return !match;
+            });
+
+
             callback(files);
         });
     } else {
@@ -153,7 +166,7 @@ Spritesheet.prototype.optimizingSpritesheet = function(callback){
     var output_directory = this.settings_instance.getOutputPath('sprite');
     var optimized_sprite_path = path.join(output_directory, this.settings.sprite.name + '-pngquant.png');
     var sprite_path = path.join(output_directory, this.settings.sprite.name + '.png');
-
+    var self = this;
     if(fs.existsSync(optimized_sprite_path))
         fs.unlinkSync(optimized_sprite_path); //Remove if exist
 
@@ -163,9 +176,14 @@ Spritesheet.prototype.optimizingSpritesheet = function(callback){
             throw err;
         }
 
-        var file_stat = fs.statSync(optimized_sprite_path);
-        var file_size = u.formatSize(file_stat.size);
-        u.log('[SUCCESS] optimized sprite ['+file_size+']');
+        var optimized_stat = fs.statSync(optimized_sprite_path);
+        var original_stat = fs.statSync(sprite_path);
+        var file_size = u.formatSize(optimized_stat.size);
+        self.emit('optimizing', {
+            original : u.formatSize(original_stat.size),
+            optimized : u.formatSize(optimized_stat.size)
+        } );
+        u.log('[SUCCESS] optimized sprite ['+optimized_stat+']');
 
         fs.unlinkSync(sprite_path);
         fs.renameSync(optimized_sprite_path, sprite_path);
@@ -176,6 +194,9 @@ Spritesheet.prototype.optimizingSpritesheet = function(callback){
 };
 
 
+Spritesheet.prototype.getOutputFile = function () {
+    return path.resolve(path.join(this.settings_instance.getOutputPath('sprite'), this.settings.sprite.name + '.png'));
+};
 
 
 
