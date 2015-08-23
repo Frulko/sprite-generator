@@ -163,7 +163,7 @@ Settings.prototype.saveConfigFile = function (){
 		if(err) {
 			console.log(err);
 		} else {
-			console.log('[SUCCESS] settings saved');
+			u.log('[SUCCESS] settings saved');
 		}
 	});
 };
