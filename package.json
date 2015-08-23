@@ -1,7 +1,7 @@
 {
   "name": "node-spritegenerator",
-  "version": "1.0.4",
-  "description": "",
+  "version": "1.0.7",
+  "description": "Build your sprite from your images assets",
   "main": "index.js",
   "dependencies": {
     "binpacking": "^0.0.1",
@@ -13,12 +13,10 @@
     "node-imagehelper": "^1.0.0",
     "pngquant-bin": "^2.0.1"
   },
-  "devDependencies": {
-    "node-imagehelper": "^1.0.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Frulko/sprite-generator.git"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  "author": "Frulko <guillaume.dumoulin@hotmail.fr> (http://guillaume-dumoulin.fr)",
+  "license": "MIT"
 }
