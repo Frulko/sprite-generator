@@ -116,6 +116,10 @@ Settings.prototype.checkConfigFile = function (cb){
 
 }
 
+Settings.prototype.getDefaultSettings = function () {
+	return default_settings;
+};
+
 
 Settings.prototype.loadConfig = function(cb){
 	cb = cb || (function () {});
@@ -131,7 +135,17 @@ Settings.prototype.loadConfig = function(cb){
 					return;
 				}
 
-				cb(data);
+				var data_parsed = {};
+				try {
+					data_parsed = JSON.parse(data);
+
+				} catch (e) {
+					console.error('Error when parsed JSON');
+				} finally {
+					cb(data_parsed);
+				}
+
+
 			});
 		} else {
 			cb(false);
