@@ -28,11 +28,9 @@ SpriteGenerator.prototype.generate = function (settingsObject, callback){
 
     settings.loadConfig(function (config) {
 
-        if (config) {
+        if (typeof config.working_directory !== 'undefined' && !(typeof settingsObject.force_config !== 'undefined' && settingsObject.force_config)) {
             override = new Settings(config);
         }
-
-
 
         self.process(settings, function (e) {
             if(!config || (typeof settingsObject.force_config !== 'undefined' && settingsObject.force_config)){
