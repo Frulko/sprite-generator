@@ -133,13 +133,11 @@ Spritesheet.prototype.saveSpriteSheet = function (images, cb){
         }
 
         if(self.settings.sprite.compression){
-            console.log('compression')
             self.optimizingSpritesheet(function () {
                 res.sprite = spriteImage;
                 callback(res, err);
             });
         } else {
-            console.log('no compression')
             res.sprite = spriteImage;
             callback(res, err);
         }
@@ -170,7 +168,7 @@ Spritesheet.prototype.optimizingSpritesheet = function(callback){
         u.log('[SUCCESS] optimized sprite ['+file_size+']');
 
         fs.unlinkSync(sprite_path);
-        fs.renameSync(optimized_sprite_path, sprite_path);        
+        fs.renameSync(optimized_sprite_path, sprite_path);
 
         callback();
     });
