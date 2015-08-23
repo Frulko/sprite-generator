@@ -35,14 +35,18 @@ module.exports = {
 
         settings.loadConfig(function (config) {
 
-            if(config){
-                settings = new Settings(config);
+            if (config) {
+                override = new Settings(config);
             }
+
+
 
             spriteProcess(settings, function () {
                 if(!config || (typeof settingsObject.force_config !== 'undefined' && settingsObject.force_config)){
                     settings.saveConfigFile(settings);
                 }
+
+                callback();
             });
         });
 
