@@ -16,7 +16,7 @@ u.debug = true;
 
 
 var css_rules = [
- {'_hover' : ':hover'},
+ {'_hover' : function (css_class) {    cb();}},
  {'_active' : ':active'}
 ];
 
