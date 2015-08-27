@@ -65,6 +65,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
  var relative_sprite = this.settings_instance.getRelativePath('style', 'sprite');
  u.log(relative_sprite);
  var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
+ var bg_sprite_filename = sprite_filename.replace(path.sep, '/');
 
  var css = "/* GENERATED CSS - "+date+" */ \n";
     css_rules = this.settings.style.rules;
@@ -73,7 +74,7 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
      css += '.icon{ display:inline-block; *display:inline; *zoom:1; } \n';
  }
 
- css += '[class^="' + this.settings.style.prefix + '"],[class*="' + this.settings.style.prefix + '"] { background:url('+ sprite_filename +') no-repeat top left;} \n';
+ css += '[class^="' + this.settings.style.prefix + '"],[class*="' + this.settings.style.prefix + '"] { background:url('+ bg_sprite_filename +') no-repeat top left;} \n';
 
  var css_items = [];
 
