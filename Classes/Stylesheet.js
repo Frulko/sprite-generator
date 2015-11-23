@@ -78,6 +78,8 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
  var css_items = [];
 
+ var style_items = [];
+
 
  for(var i in blocks){
 
@@ -114,7 +116,15 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
       css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.margin.left) + "px; height: " + (block.height - that.settings.sprite.margin.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
 
-
+    //New feature : custom rules with function :)
+    style_items.push({
+        originalName : block.name,
+        fullClass : that.settings.style.prefix + block.name,
+        width : (block.width - that.settings.sprite.margin.left),
+        height : (block.height - that.settings.sprite.margin.top),
+        posX : block.left,
+        posY : block.top
+    });
 
  }
     //Todo custom dir / default inside
@@ -138,6 +148,16 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
 
 
 
+};
+
+//Process function at each items
+Stylesheet.prototype.inlineProcess = function (item) {
+
+};
+
+//Process function for all items just before write css
+Stylesheet.prototype.postProcess = function (items) {
+    this.settings_instance.execPostprocess.call(this, items);
 };
 
 
