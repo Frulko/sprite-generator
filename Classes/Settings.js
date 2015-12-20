@@ -25,18 +25,26 @@ var default_settings = {
         stylesheet    : false,
         spritesheet   : false
     },
+    delay             : 0,
     style             : {
         type : 'css',
 		name : '',
+		retina: false,
         icon : false,
         prefix : 's-',
         rules : [
             {'_hover' : ':hover'},
             {'_active' : ':active'}
-        ]
+        ],
+
+    },
+    hook: {
+        each: (function () {}),
+        after: (function () {})
     },
     sprite            : {
         name          : 'sprite',
+		path		  : false,
         compression   : true,
         engine        : 'pngquant', //In the futur
         arrangement   : 'vertical', //horizontal , auto
@@ -159,7 +167,15 @@ Settings.prototype.loadConfig = function(cb){
 Settings.prototype.saveConfigFile = function (){
 	u.log('Settings: generateConfigFile');
 
-	fs.writeFile(this.getConfigPath(), JSON.stringify(default_settings, null, '\t'), function(err) {
+    var function_handler = function(key, value) {
+        if (typeof value === 'function') {
+            return value.toString();
+        } else {
+            return value;
+        }
+    };
+
+	fs.writeFile(this.getConfigPath(), JSON.stringify(default_settings, function_handler, '\t'), function(err) {
 		if(err) {
 			console.log(err);
 		} else {
