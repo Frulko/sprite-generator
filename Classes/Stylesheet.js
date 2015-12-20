@@ -16,15 +16,15 @@ u.debug = true;
 
 
 var css_rules = [
- {'_hover' : function (css_class) {    cb();}},
- {'_active' : ':active'}
+    {'_hover' : function (css_class) {    cb();}},
+    {'_active' : ':active'}
 ];
 
 var Stylesheet = function Stylesheet(settings){
 
     //Properties
 
- this.settings_loaded = false;
+    this.settings_loaded = false;
 
     if(u.isUndefined(settings)){
         console.log('You need to specify settings object');
@@ -38,98 +38,133 @@ var Stylesheet = function Stylesheet(settings){
 };
 
 Stylesheet.prototype.setSettings = function(settings){
- u.log('Stylesheet: setSettings');
- this.settings = settings;
+    u.log('Stylesheet: setSettings');
+    this.settings = settings;
 
- u.log('Stylesheet: settings', settings);
+    u.log('Stylesheet: settings', settings);
 
- this.verifyingSettings();
+    this.verifyingSettings();
 };
 
 
 Stylesheet.prototype.verifyingSettings = function(){
- u.log('Stylesheet: verifyingSettings');
+    u.log('Stylesheet: verifyingSettings');
 
- this.settings_loaded = true;
+    this.settings_loaded = true;
 
 };
 
-Stylesheet.prototype.generateCSS = function (blocks, cb){
- u.log('Stylesheet: generateCSS');
+Stylesheet.prototype.generateCSS = function (sprite, cb){
+    var blocks = sprite.assets;
+
+    u.log('Stylesheet: generateCSS');
 
     var callback = cb || (function () {});
- var date = moment().format('MMMM Do YYYY, h:mm:ss a');
- var prefix = this.settings.style.css_prefix;
- var that = this;
+    var date = moment().format('MMMM Do YYYY, h:mm:ss a');
+    var prefix = this.settings.style.css_prefix;
+    var that = this;
 
- var relative_sprite = this.settings_instance.getRelativePath('style', 'sprite');
- u.log(relative_sprite);
- var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
- var bg_sprite_filename = sprite_filename.split(path.sep).join('/');
+    var relative_sprite = this.settings_instance.getRelativePath('style', 'sprite');
+    var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
 
- var css = "/* GENERATED CSS - "+date+" */ \n";
+    if (this.settings.sprite.path) {
+        var f_path = this.settings.sprite.path;
+        sprite_filename = f_path + (f_path[f_path.length - 1] !== '/' ? '/' : '') + this.settings.sprite.name + '.png';
+    }
+
+
+    var bg_sprite_filename = sprite_filename.split(path.sep).join('/');
+    var css = "/* GENERATED CSS - "+date+" */ \n";
+
+
+
+
     css_rules = this.settings.style.rules;
 
- if(that.settings.style.icon){
-     css += '.icon{ display:inline-block; *display:inline; *zoom:1; } \n';
- }
+    if(that.settings.style.icon){
+        css += '.icon{ display:inline-block; *display:inline; *zoom:1; } \n';
+    }
 
- css += '[class^="' + this.settings.style.prefix + '"],[class*="' + this.settings.style.prefix + '"] { background:url('+ bg_sprite_filename +') no-repeat top left;} \n';
-
- var css_items = [];
-
- var style_items = [];
+    css += '.' + this.settings.sprite.name + ' { background:url('+ bg_sprite_filename +') no-repeat top left;} \n';
+    css += '[class^="' + this.settings.style.prefix + '"],[class*="' + this.settings.style.prefix + '"] { background:url('+ bg_sprite_filename +') no-repeat top left;} \n';
 
 
- for(var i in blocks){
+    var css_items = [];
 
-  var block = blocks[i];
-  var classname = block.name;
-
-  var custom_rule = false;
-
-  for(var j in css_rules){
-
-     var rule = css_rules[j];
-
-     var keys = Object.keys(rule);
-     //classname = classname.replace(j, rule);
-
-      //u.log(classname.indexOf(keys[0]) + ' --- ' + keys[0].length);
-     if(classname.indexOf(keys[0]) > -1){
-        classname = classname.replace(keys[0], rule[keys]);
-         custom_rule = true;
-
-      break;
-     }
+    var style_items = [];
 
 
+    for(var i in blocks){
 
-  }
+        var block = blocks[i];
+        var classname = block.name;
 
-     if(!custom_rule){
-         css_items.push(that.settings.style.prefix + classname);
-     }
+        var custom_rule = false;
 
-     classname = classname.split(path.sep);
-     classname = classname[classname.length-1];
+        for(var j in css_rules){
 
-      css += '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.margin.left) + "px; height: " + (block.height - that.settings.sprite.margin.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
+            var rule = css_rules[j];
 
-    //New feature : custom rules with function :)
-    style_items.push({
-        originalName : block.name,
-        fullClass : that.settings.style.prefix + block.name,
-        width : (block.width - that.settings.sprite.margin.left),
-        height : (block.height - that.settings.sprite.margin.top),
-        posX : block.left,
-        posY : block.top
-    });
+            var keys = Object.keys(rule);
+            //classname = classname.replace(j, rule);
 
- }
+            //u.log(classname.indexOf(keys[0]) + ' --- ' + keys[0].length);
+            if(classname.indexOf(keys[0]) > -1){
+                classname = classname.replace(keys[0], rule[keys]);
+                custom_rule = true;
+
+                break;
+            }
+        }
+
+        if(!custom_rule){
+            css_items.push(that.settings.style.prefix + classname);
+        }
+
+        classname = classname.split(path.sep);
+        classname = classname[classname.length-1];
+
+        var css_item = '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.margin.left) + "px; height: " + (block.height - that.settings.sprite.margin.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
+
+        //New feature : custom rules with function :)
+        style_items.push({
+            originalName : block.name,
+            fullClass : that.settings.style.prefix + block.name,
+            width : (block.width - that.settings.sprite.margin.left),
+            height : (block.height - that.settings.sprite.margin.top),
+            posX : block.left,
+            posY : block.top,
+
+        });
+
+        var item = {
+            originalName : block.name,
+            className : that.settings.style.prefix + block.name,
+            width : (block.width - that.settings.sprite.margin.left),
+            height : (block.height - that.settings.sprite.margin.top),
+            posX : block.left,
+            posY : block.top,
+            sprite: sprite,
+            css: css_item
+        };
+
+        if (this.settings.hook.each && typeof this.settings.hook.each === 'function') {
+            item =  this.settings.hook.each.call(this, item);
+            item.css += '\n';
+        }
+
+        css += item.css;
+
+
+
+    }
     //Todo custom dir / default inside
     var output_directory = this.settings_instance.getOutputPath('stylesheet');
 
+
+    if (this.settings.style.retina) {
+        css += this.retinaSupport(sprite.canvas, bg_sprite_filename);
+    }
 
 
     fs.writeFile(path.join(output_directory, this.settings_instance.getStylesheetFilename()), css, function(err) {
@@ -145,15 +180,35 @@ Stylesheet.prototype.generateCSS = function (blocks, cb){
             callback();
         }
     });
-
-
-
 };
 
 //Process function at each items
 Stylesheet.prototype.inlineProcess = function (item) {
 
 };
+
+
+Stylesheet.prototype.retinaSupport = function (canvas, filename) {
+    var real_width = canvas.width/2;
+    var real_height = canvas.height/2;
+
+    var css = '\n';
+    css += '\n';
+    css += '@media only screen and (-webkit-min-device-pixel-ratio: 1.3),\n';
+    css += 'only screen and (min--moz-device-pixel-ratio: 1.3),\n';
+    css += 'only screen and (min-resolution: 210dpi),\n';
+    css += 'only screen and (max-width: 767px) {\n';
+    css += '.'+ this.settings.style.retina +' {\n';
+    css += '        background-image: url("' + filename + '");\n';
+    css += '        background-color: transparent;\n';
+    css += '        background-repeat: no-repeat;\n';
+    css += '        background-size: '+ real_width +'px ' + real_height + 'px;\n';
+    css += '    }\n';
+    css += '}\n';
+
+    return css;
+};
+
 
 //Process function for all items just before write css
 Stylesheet.prototype.postProcess = function (items) {
