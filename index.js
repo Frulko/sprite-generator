@@ -32,12 +32,17 @@ SpriteGenerator.prototype.generate = function (settingsObject, callback){
             override = new Settings(config);
         }
 
-        self.process(settings, function (e) {
-            if(!config || (typeof settingsObject.force_config !== 'undefined' && settingsObject.force_config)){
-                settings.saveConfigFile(settings);
-            }
-            callback(e);
-        });
+        var local_settings = settings.getSettings();
+        var process_delay = setTimeout(function (){
+            clearTimeout(process_delay);
+            self.process(settings, function (e) {
+                if(!config || (typeof settingsObject.force_config !== 'undefined' && settingsObject.force_config)){
+                    settings.saveConfigFile(settings);
+                }
+                callback(e);
+            });
+
+        }, local_settings.delay);
     });
 };
 
@@ -60,7 +65,7 @@ SpriteGenerator.prototype.process = function (settings, callback) {
         }
 
         if(parseInt(res.code[0], 10) === 2){
-            styleSheet.generateCSS(res.sprite.assets, function () {
+            styleSheet.generateCSS(res.sprite, function () {
 
                 callback({
                     sprite: sprite.getOutputFile(),
