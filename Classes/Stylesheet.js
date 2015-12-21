@@ -149,8 +149,12 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
         };
 
         if (this.settings.hook.each && typeof this.settings.hook.each === 'function') {
-            item =  this.settings.hook.each.call(this, item);
-            item.css += '\n';
+            var tmp_item =  this.settings.hook.each.call(this, item);
+            if(typeof tmp_item !== 'undefined' && tmp_item) {
+                item = tmp_item;
+                item.css += '\n';
+            }
+
         }
 
         css += item.css;
