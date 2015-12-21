@@ -39,8 +39,8 @@ var default_settings = {
 
     },
     hook: {
-        each: (function () {}),
-        after: (function () {})
+        each: false,
+        after: false
     },
     sprite            : {
         name          : 'sprite',
