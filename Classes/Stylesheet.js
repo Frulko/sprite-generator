@@ -65,6 +65,11 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
     var that = this;
 
     var relative_sprite = this.settings_instance.getRelativePath('style', 'sprite');
+
+    if (this.settings.sprite.static_path.length > 0) {
+        relative_sprite = this.settings.sprite.static_path;
+    }
+
     var sprite_filename =  path.join(relative_sprite, this.settings.sprite.name + '.png');
 
     if (this.settings.sprite.path) {

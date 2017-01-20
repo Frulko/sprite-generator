@@ -43,6 +43,7 @@ var default_settings = {
         after: false
     },
     sprite            : {
+		static_path   : '',
 		generate      : true, 
         name          : 'sprite',
 		path		  : false,
