@@ -43,6 +43,7 @@ var default_settings = {
         after: false
     },
     sprite            : {
+		generate      : true, 
         name          : 'sprite',
 		path		  : false,
         compression   : true,

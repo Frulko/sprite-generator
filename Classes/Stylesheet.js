@@ -127,7 +127,7 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
         var css_item = '.' + that.settings.style.prefix + classname + "{ width: " + (block.width - that.settings.sprite.margin.left) + "px; height: " + (block.height - that.settings.sprite.margin.top) + "px; background-position: -"+block.left+"px -"+block.top+"px; } \n";
 
         //New feature : custom rules with function :)
-        style_items.push({
+        /*style_items.push({
             originalName : block.name,
             fullClass : that.settings.style.prefix + block.name,
             width : (block.width - that.settings.sprite.margin.left),
@@ -135,7 +135,7 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
             posX : block.left,
             posY : block.top,
 
-        });
+        });*/
 
         var item = {
             originalName : block.name,
@@ -145,8 +145,11 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
             posX : block.left,
             posY : block.top,
             sprite: sprite,
-            css: css_item
+            css: css_item,
+            block: block
         };
+
+        style_items.push(item);
 
         if (this.settings.hook.each && typeof this.settings.hook.each === 'function') {
             var tmp_item =  this.settings.hook.each.call(this, item);
@@ -170,6 +173,15 @@ Stylesheet.prototype.generateCSS = function (sprite, cb){
         css += this.retinaSupport(sprite.canvas, bg_sprite_filename);
     }
 
+    if (this.settings.hook.after && typeof this.settings.hook.after === 'function') {
+        this.settings.hook.after.call(this, style_items);
+    }
+
+    if (!this.settings.sprite.generate) {
+        u.log('Stylesheet: Don\'t generate stylesheet');
+        callback();
+        return false;
+    }
 
     fs.writeFile(path.join(output_directory, this.settings_instance.getStylesheetFilename()), css, function(err) {
         if(err) {

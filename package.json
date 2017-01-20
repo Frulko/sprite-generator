@@ -1,6 +1,6 @@
 {
   "name": "node-spritegenerator",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Build your sprite from your images assets",
   "main": "index.js",
   "dependencies": {
